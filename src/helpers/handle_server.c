@@ -7,6 +7,10 @@
 #include "../constants/configs.h"
 #include "../helpers/handle_error.h"
 
+struct sockaddr_in get_bind_address();
+int check_connection(int result, short error_code);
+int close_socket(int socketfd);
+
 struct sockaddr_in get_bind_address()
 {
     return (struct sockaddr_in){
@@ -26,18 +30,21 @@ int close_socket(int socketfd)
     return 0;
 }
 
-int create_socket()
+int check_connection(int result, short error_code)
 {
-    int socketfd = socket(AF_INET, SOCK_STREAM, 0);
-
-    if (socketfd < 0)
+    if (error_code < 0)
     {
-        handle_error(ERROR_SOCKET_CREATION);
-        close_socket(socketfd);
+        handle_error(error_code);
+        close_socket(result);
         return -1;
     }
 
-    return socketfd;
+    return result;
+}
+
+int create_socket()
+{
+    return check_connection(socket(AF_INET, SOCK_STREAM, 0), ERROR_SOCKET_CREATION);
 }
 
 int bind_socket(int socketfd)
@@ -46,28 +53,12 @@ int bind_socket(int socketfd)
 
     int binding = bind(socketfd, (struct sockaddr *)&server_address, sizeof(server_address));
 
-    if (binding < 0)
-    {
-        handle_error(ERROR_BINDING);
-        close_socket(socketfd);
-        return -1;
-    }
-
-    return binding;
+    return check_connection(binding, ERROR_BINDING);
 }
 
 int init_server(int socketfd)
 {
-    int listening = listen(socketfd, MAX_CONNECTIONS);
-
-    if (listening < 0)
-    {
-        handle_error(ERROR_LISTENING);
-        close_socket(socketfd);
-        return -1;
-    }
-
-    return listening;
+    return check_connection(listen(socketfd, MAX_CONNECTIONS), ERROR_LISTENING);
 }
 
 int accept_connection(int socketfd)
@@ -77,12 +68,5 @@ int accept_connection(int socketfd)
 
     int new_socket = accept(socketfd, (struct sockaddr *)&client_address, &client_size);
 
-    if (new_socket < 0)
-    {
-        handle_error(ERROR_ACCEPT_CONNECTION);
-        close_socket(socketfd);
-        return -1;
-    }
-
-    return new_socket;
+    return check_connection(new_socket, ERROR_ACCEPT_CONNECTION);
 }
