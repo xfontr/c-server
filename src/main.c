@@ -1,18 +1,16 @@
 #include <ctype.h>
-#include <stdio.h>
-#include <sys/socket.h>
-
-sockfd;
+#include "./helpers/handle_server.h"
 
 int main()
 {
-    int connection = socket(AF_INET, SOCK_STREAM, 0);
+    int connection = open_connection();
 
-    if (connection < 0)
+    if (connection == 1)
     {
-        fprintf(stderr, "Error\n");
         return 1;
     }
+
+    close_connection(&connection);
 
     return 0;
 }
