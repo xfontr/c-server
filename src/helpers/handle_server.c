@@ -26,18 +26,22 @@ int close_socket(int socketfd)
     return 0;
 }
 
-int create_socket()
+int check_connection(int result, int socketfd, short error_code)
 {
-    int socketfd = socket(AF_INET, SOCK_STREAM, 0);
-
-    if (socketfd < 0)
+    if (result < 0)
     {
-        handle_error(ERROR_SOCKET_CREATION);
+        handle_error(error_code);
         close_socket(socketfd);
         return -1;
     }
 
-    return socketfd;
+    return result;
+}
+
+int create_socket()
+{
+    int socketfd = socket(AF_INET, SOCK_STREAM, 0);
+    return check_connection(socketfd, socketfd, ERROR_SOCKET_CREATION);
 }
 
 int bind_socket(int socketfd)
@@ -46,28 +50,12 @@ int bind_socket(int socketfd)
 
     int binding = bind(socketfd, (struct sockaddr *)&server_address, sizeof(server_address));
 
-    if (binding < 0)
-    {
-        handle_error(ERROR_BINDING);
-        close_socket(socketfd);
-        return -1;
-    }
-
-    return binding;
+    return check_connection(binding, socketfd, ERROR_BINDING);
 }
 
 int init_server(int socketfd)
 {
-    int listening = listen(socketfd, MAX_CONNECTIONS);
-
-    if (listening < 0)
-    {
-        handle_error(ERROR_LISTENING);
-        close_socket(socketfd);
-        return -1;
-    }
-
-    return listening;
+    return check_connection(listen(socketfd, MAX_CONNECTIONS), socketfd, ERROR_LISTENING);
 }
 
 int accept_connection(int socketfd)
@@ -77,12 +65,5 @@ int accept_connection(int socketfd)
 
     int new_socket = accept(socketfd, (struct sockaddr *)&client_address, &client_size);
 
-    if (new_socket < 0)
-    {
-        handle_error(ERROR_ACCEPT_CONNECTION);
-        close_socket(socketfd);
-        return -1;
-    }
-
-    return new_socket;
+    return check_connection(new_socket, socketfd, ERROR_ACCEPT_CONNECTION);
 }
