@@ -1,0 +1,9 @@
+#ifndef ERROR_CODES
+#define ERROR_CODES
+
+#define ERROR_SOCKET_CREATION -1
+#define ERROR_BINDING -2
+#define ERROR_CLOSING -3
+#define ERROR_UNKNOWN -99
+
+#endif
