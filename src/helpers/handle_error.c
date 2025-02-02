@@ -4,9 +4,9 @@
 #include <string.h>
 #include "../constants/error_codes.h"
 
-char print_error(short error_code, char *message);
+void print_error(short error_code, char *message);
 
-char print_error(short error_code, char *message)
+void print_error(short error_code, char *message)
 {
     printf("Error %d: %s - %s\n", error_code, message, strerror(errno));
 }
@@ -18,21 +18,30 @@ void handle_error(short error_code)
     switch (error_code)
     {
     case ERROR_SOCKET_CREATION:
-        message = "Could not create socket";
+        message = "Unable to create socket";
         break;
 
     case ERROR_BINDING:
-        message = "Could not connect to server";
+        message = "Unable to bind the socket to the server";
+        break;
+
+    case ERROR_LISTENING:
+        message = "Could not listen for connections";
+        break;
+
+    case ERROR_ACCEPT_CONNECTION:
+        message = "Socket connection rejected";
         break;
 
     case ERROR_CLOSING:
-        message = "Could not close the server";
+        message = "Unable to close the server";
         break;
 
     default:
+        error_code = ERROR_UNKNOWN;
         message = "Unknown error";
         break;
     }
 
-    print_error(error_code | ERROR_UNKNOWN, message);
+    print_error(error_code, message);
 }
