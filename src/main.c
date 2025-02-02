@@ -3,12 +3,9 @@
 
 int main()
 {
-    int connection = open_connection();
+    int connection = exit_on_fail(open_connection());
 
-    if (connection == 1)
-    {
-        return 1;
-    }
+    exit_on_fail(init_server(connection));
 
     close_connection(&connection);
 
