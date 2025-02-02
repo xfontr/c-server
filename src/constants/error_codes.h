@@ -4,6 +4,8 @@
 #define ERROR_SOCKET_CREATION -1
 #define ERROR_BINDING -2
 #define ERROR_CLOSING -3
+#define ERROR_LISTENING -4
+#define ERROR_ACCEPT_CONNECTION -5
 #define ERROR_UNKNOWN -99
 
 #endif
