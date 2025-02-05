@@ -6,6 +6,7 @@
 #define ERROR_CLOSING -3
 #define ERROR_LISTENING -4
 #define ERROR_ACCEPT_CONNECTION -5
+#define ERROR_REUSABLE_SOCKET -6
 #define ERROR_UNKNOWN -99
 
 #endif

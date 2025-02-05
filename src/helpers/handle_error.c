@@ -37,6 +37,10 @@ void handle_error(short error_code)
         message = "Unable to close the server";
         break;
 
+    case ERROR_REUSABLE_SOCKET:
+        message = "Could not set the socket connection to be reusable";
+        break;
+
     default:
         error_code = ERROR_UNKNOWN;
         message = "Unknown error";
