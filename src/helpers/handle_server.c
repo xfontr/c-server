@@ -15,7 +15,8 @@ int accept_connection(int socketfd);
 int enable_port_reuse(int socketfd);
 int close_socket(int socketfd);
 struct sockaddr_in get_bind_address();
-int check_errors(int result, short error_code);
+int set_up_server();
+int set_up_error(int socketfd, int error_code);
 
 struct sockaddr_in get_bind_address()
 {
@@ -25,20 +26,15 @@ struct sockaddr_in get_bind_address()
         .sin_port = htons(PORT)};
 }
 
-int check_errors(int result, short error_code)
+int close_socket(int socketfd)
 {
-    if (result < 0)
+    if (close(socketfd) < 0)
     {
-        handle_error(error_code);
+        handle_error(ERROR_SOCKET_CLOSING);
         return -1;
     }
 
-    return result;
-}
-
-int close_socket(int socketfd)
-{
-    return check_errors(close(socketfd), ERROR_SOCKET_CLOSING);
+    return 1;
 }
 
 int enable_port_reuse(int socketfd)
@@ -69,40 +65,32 @@ int accept_connection(int socketfd)
     struct sockaddr_in client_address;
     socklen_t client_size = sizeof(client_address);
 
-    int new_socket = accept(socketfd, (struct sockaddr *)&client_address, &client_size);
+    return accept(socketfd, (struct sockaddr *)&client_address, &client_size);
+}
 
-    int result = check_errors(new_socket, ERROR_SOCKET_CLIENT_CONNECTION);
-
-    if (result >= 0)
-    {
-        printf("Connection established\n");
-    }
-
-    return result;
+int set_up_error(int socketfd, int error_code)
+{
+    close_socket(socketfd);
+    return error_code;
 }
 
 int set_up_server()
 {
-    unsigned short status = 0;
-
     int socketfd = create_socket();
 
-    if (socketfd >= 0)
-    {
-        status = enable_port_reuse(socketfd);
-    }
+    if (socketfd < 0)
+        return ERROR_SOCKET_CREATION;
 
-    if (status >= 0)
-    {
-        status = bind_socket(socketfd);
-    }
+    if (enable_port_reuse(socketfd) < 0)
+        return set_up_error(socketfd, ERROR_SOCKET_REUSABLE);
 
-    if (status >= 0)
-    {
-        status = init_server(socketfd);
-    }
+    if (bind_socket(socketfd) < 0)
+        return set_up_error(socketfd, ERROR_SOCKET_BINDING);
 
-    return status >= 0 ? socketfd : status;
+    if (init_server(socketfd) < 0)
+        return set_up_error(socketfd, ERROR_SOCKET_LISTENING);
+
+    return socketfd;
 }
 
 int server()
@@ -110,7 +98,7 @@ int server()
     int socketfd = set_up_server();
 
     if (socketfd < 0)
-        return -1;
+        return socketfd;
 
     printf("%s\n", "Server started");
 
@@ -119,12 +107,17 @@ int server()
 
         int new_socket = accept_connection(socketfd);
 
-        // handle connection
+        if (new_socket < 0)
+        {
+            handle_error(ERROR_SOCKET_CLIENT_CONNECTION);
+        }
+        else
+        {
+            printf("%s\n", "Client connected");
+        }
 
         close_socket(new_socket);
     }
 
-    close_socket(socketfd);
-
-    return 1;
+    return close_socket(socketfd) < 0 ? -1 : 0;
 }
