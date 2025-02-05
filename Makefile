@@ -37,3 +37,7 @@ run: $(TARGET)
 # Clean build artifacts
 clean:
 	rm -rf $(OUT) $(OBJ)
+
+# Connect to the server
+connect:
+	nc 127.0.0.1 8080

@@ -21,19 +21,23 @@ void handle_error(short error_code)
         message = "Unable to create socket";
         break;
 
-    case ERROR_BINDING:
+    case ERROR_SOCKET_BINDING:
         message = "Unable to bind the socket to the server";
         break;
 
-    case ERROR_LISTENING:
+    case ERROR_SOCKET_REUSABLE:
+        message = "Could not set the socket connection to be reusable";
+        break;
+
+    case ERROR_SOCKET_LISTENING:
         message = "Could not listen for connections";
         break;
 
-    case ERROR_ACCEPT_CONNECTION:
+    case ERROR_SOCKET_CLIENT_CONNECTION:
         message = "Socket connection rejected";
         break;
 
-    case ERROR_CLOSING:
+    case ERROR_SOCKET_CLOSING:
         message = "Unable to close the server";
         break;
 
