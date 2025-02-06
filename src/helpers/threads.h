@@ -10,8 +10,12 @@ typedef struct
     int size;
 } Thread;
 
-void remove_threads(pthread_t thread_id, Thread *thread);
-int create_thread(Thread *thread);
+typedef void *(*start_routine)(void *);
+
+void remove_threads(Thread *thread);
+int create_thread(Thread *thread, start_routine callback);
 Thread thread_pool();
+
+void thread_test();
 
 #endif
