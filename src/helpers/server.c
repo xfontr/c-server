@@ -110,10 +110,6 @@ int server()
 
     puts("Server started");
 
-    // Thread thread = {
-    //     .size = 0,
-    // };
-
     while (1)
     {
         int new_socket = accept_connection(socketfd);
@@ -124,11 +120,7 @@ int server()
         }
         else
         {
-            pthread_t thread_id;
-            // pthread_create(&thread_id, NULL, clientConnected, NULL);
-            // add_thread(thread_id, &thread);
-            puts("this is after thread creation");
-            // pthread_join(thread_id, NULL);
+            puts("Connection accepted");
         }
 
         close_socket(new_socket);
