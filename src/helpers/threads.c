@@ -17,12 +17,15 @@ int create_thread(Thread *thread, start_routine callback)
 {
     if (thread->size >= MAX_CONNECTIONS)
     {
-        return -1;
+        return -1; // TODO: Queue?
     }
 
     pthread_t thread_id;
-    pthread_create(&thread_id, NULL, callback, NULL);
-    log_thread(thread_id, thread);
+    int result = pthread_create(&thread_id, NULL, callback, NULL);
+    if (result >= 0)
+        log_thread(thread_id, thread);
+
+    return result;
 }
 
 void remove_threads(Thread *thread)

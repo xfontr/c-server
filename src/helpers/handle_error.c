@@ -8,7 +8,15 @@ void print_error(short error_code, char *message);
 
 void print_error(short error_code, char *message)
 {
-    printf("Error %d: %s - %s\n", error_code, message, strerror(errno));
+    if (errno == NULL)
+    {
+        printf("Error %d: %s", error_code, message);
+    }
+    else
+    {
+        printf("Error %d: %s - %s\n", error_code, message, strerror(errno));
+        errno = 0;
+    }
 }
 
 void handle_error(short error_code)
