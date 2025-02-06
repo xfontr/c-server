@@ -1,6 +1,6 @@
 #include <ctype.h>
 #include <stdio.h>
-#include "./helpers/handle_server.h"
+#include "./helpers/server.h"
 
 int main()
 {

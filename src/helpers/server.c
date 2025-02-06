@@ -1,9 +1,9 @@
 #include <ctype.h>
 #include <stdio.h>
 #include <sys/socket.h>
-#include <unistd.h>
-#include <netinet/in.h>
-#include <limits.h>
+#include <unistd.h>     // close
+#include <netinet/in.h> // sockaddr_in
+#include <limits.h>     // INT_MAX
 #include "../constants/error_codes.h"
 #include "../constants/configs.h"
 #include "../helpers/handle_error.h"
@@ -100,11 +100,10 @@ int server()
     if (socketfd < 0)
         return socketfd;
 
-    printf("%s\n", "Server started");
+    puts("Server started");
 
     while (1)
     {
-
         int new_socket = accept_connection(socketfd);
 
         if (new_socket < 0)
@@ -113,7 +112,7 @@ int server()
         }
         else
         {
-            printf("%s\n", "Client connected");
+            puts("Connection accepted");
         }
 
         close_socket(new_socket);
