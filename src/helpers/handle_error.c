@@ -41,6 +41,14 @@ void handle_error(short error_code)
         message = "Unable to close the server";
         break;
 
+    case ERROR_THREAD_CREATION:
+        message = "Unable to create thread";
+        break;
+
+    case ERROR_THREAD_CLOSING:
+        message = "Unable to close thread";
+        break;
+
     default:
         error_code = ERROR_UNKNOWN;
         message = "Unknown error";

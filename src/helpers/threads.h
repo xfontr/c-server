@@ -16,6 +16,4 @@ void remove_threads(Thread *thread);
 int create_thread(Thread *thread, start_routine callback);
 Thread thread_pool();
 
-void thread_test();
-
 #endif
