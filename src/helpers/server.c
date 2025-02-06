@@ -93,14 +93,6 @@ int set_up_server()
     return socketfd;
 }
 
-void *clientConnected(void *vargp);
-
-void *clientConnected(void *vargp)
-{
-    puts("Client connected");
-    return NULL;
-}
-
 int server()
 {
     int socketfd = set_up_server();
