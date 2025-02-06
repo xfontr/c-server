@@ -1,9 +1,9 @@
 #include <ctype.h>
 #include <stdio.h>
 #include <sys/socket.h>
-#include <unistd.h>
-#include <netinet/in.h>
-#include <limits.h>
+#include <unistd.h>     // close
+#include <netinet/in.h> // sockaddr_in
+#include <limits.h>     // INT_MAX
 #include "../constants/error_codes.h"
 #include "../constants/configs.h"
 #include "../helpers/handle_error.h"
@@ -93,6 +93,14 @@ int set_up_server()
     return socketfd;
 }
 
+void *clientConnected(void *vargp);
+
+void *clientConnected(void *vargp)
+{
+    puts("Client connected");
+    return NULL;
+}
+
 int server()
 {
     int socketfd = set_up_server();
@@ -100,11 +108,14 @@ int server()
     if (socketfd < 0)
         return socketfd;
 
-    printf("%s\n", "Server started");
+    puts("Server started");
+
+    // Thread thread = {
+    //     .size = 0,
+    // };
 
     while (1)
     {
-
         int new_socket = accept_connection(socketfd);
 
         if (new_socket < 0)
@@ -113,7 +124,11 @@ int server()
         }
         else
         {
-            printf("%s\n", "Client connected");
+            pthread_t thread_id;
+            // pthread_create(&thread_id, NULL, clientConnected, NULL);
+            // add_thread(thread_id, &thread);
+            puts("this is after thread creation");
+            // pthread_join(thread_id, NULL);
         }
 
         close_socket(new_socket);
