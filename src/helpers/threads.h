@@ -11,9 +11,10 @@ typedef struct
 } Thread;
 
 typedef void *(*start_routine)(void *);
+typedef void *(*callback_parameter);
 
 int remove_threads(Thread *thread);
-int create_thread(Thread *thread, start_routine callback);
+int create_thread(Thread *thread, start_routine callback, callback_parameter arg);
 Thread thread_pool();
 
 #endif

@@ -13,7 +13,7 @@ void log_thread(pthread_t thread_id, Thread *thread)
     thread->size++;
 }
 
-int create_thread(Thread *thread, start_routine callback)
+int create_thread(Thread *thread, start_routine callback, callback_parameter arg)
 {
     if (thread->size >= MAX_CONNECTIONS)
     {
@@ -22,7 +22,8 @@ int create_thread(Thread *thread, start_routine callback)
 
     pthread_t thread_id;
 
-    int thread_result = pthread_create(&thread_id, NULL, callback, NULL);
+    // TODO: Consider detached threads (2nd param) depending on the thread pattern used
+    int thread_result = pthread_create(&thread_id, NULL, callback, arg);
 
     if (thread_result >= 0)
         log_thread(thread_id, thread);
