@@ -46,7 +46,7 @@ void handle_error(short error_code)
         break;
 
     case ERROR_SOCKET_CLOSING:
-        message = "Unable to close the server";
+        message = "Unable to close the selected socket";
         break;
 
     case ERROR_THREAD_CREATION:
@@ -55,6 +55,10 @@ void handle_error(short error_code)
 
     case ERROR_THREAD_CLOSING:
         message = "Unable to close thread";
+        break;
+
+    case ERROR_MEMORY_ALLOCATION:
+        message = "Could not allocate memory for the designated resource";
         break;
 
     default:
