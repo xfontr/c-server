@@ -1,11 +1,28 @@
 #include <ctype.h>
 #include <stdio.h>
-#include "./helpers/server.h"
-#include "./helpers/handle_error.h"
+#include <stdlib.h>
+
+#include "./services/server.h"
+#include "./utils/server_utils.h"
+#include "./services/errors.h"
+#include "./constants/error_codes.h"
+
+void *handler(void *new_socket)
+{
+    puts("Connection");
+    int client_socket = *(int *)new_socket;
+
+    // Actual handler
+
+    close_socket(client_socket);
+    free(new_socket);
+}
 
 int main()
 {
-    int result = server();
+    puts("Server on");
+
+    int result = server(handler);
 
     if (result < 0)
     {
