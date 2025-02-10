@@ -4,6 +4,7 @@
 #include <unistd.h>     // close
 #include <netinet/in.h> // sockaddr_in
 #include <limits.h>     // INT_MAX
+#include <stdlib.h>     // malloc, free
 #include "../constants/error_codes.h"
 #include "../constants/configs.h"
 #include "../helpers/handle_error.h"
@@ -94,9 +95,12 @@ int set_up_server()
     return socketfd;
 }
 
-void *handle_thread(void *vargp)
+void *handle_thread(void *new_socket)
 {
     puts("Connection");
+    int client_socket = *(int *)new_socket;
+    close_socket(client_socket);
+    free(new_socket);
 }
 
 int server()
@@ -120,16 +124,24 @@ int server()
         }
         else
         {
-            int thread_creation = create_thread(&threads, handle_thread);
+            int *new_socket_ptr = malloc(sizeof(new_socket));
+
+            if (!new_socket_ptr)
+            {
+                handle_error(ERROR_MEMORY_ALLOCATION);
+                close_socket(new_socket);
+                continue;
+            }
+
+            int thread_creation = create_thread(&threads, handle_thread, new_socket_ptr);
 
             if (thread_creation < 0)
             {
                 handle_error(ERROR_THREAD_CREATION);
+                free(new_socket_ptr);
                 close_socket(new_socket);
             }
         }
-
-        close_socket(new_socket);
     }
 
     int thread_closing = remove_threads(&threads);
