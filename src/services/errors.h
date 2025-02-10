@@ -1,5 +1,5 @@
-#ifndef HANDLE_ERROR
-#define HANDLE_ERROR
+#ifndef HANDLE_ERRORS
+#define HANDLE_ERRORS
 
 void handle_error(short error_code);
 

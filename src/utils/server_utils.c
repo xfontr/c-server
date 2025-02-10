@@ -5,19 +5,18 @@
 #include <netinet/in.h> // sockaddr_in
 #include <limits.h>     // INT_MAX
 #include <stdlib.h>     // malloc, free
+
+#include "server_utils.h"
+#include "../services/errors.h"
 #include "../constants/error_codes.h"
 #include "../constants/configs.h"
-#include "../helpers/handle_error.h"
-#include "./threads.h"
 
 int create_socket();
 int bind_socket(int socketfd);
 int init_server(int socketfd);
 int accept_connection(int socketfd);
 int enable_port_reuse(int socketfd);
-int close_socket(int socketfd);
 struct sockaddr_in get_bind_address();
-int set_up_server();
 int set_up_error(int socketfd, int error_code);
 
 struct sockaddr_in get_bind_address()
@@ -95,61 +94,26 @@ int set_up_server()
     return socketfd;
 }
 
-void *handle_thread(void *new_socket)
+int *accept_client(int socketfd)
 {
-    puts("Connection");
-    int client_socket = *(int *)new_socket;
-    close_socket(client_socket);
-    free(new_socket);
-}
+    int new_socket = accept_connection(socketfd);
 
-int server()
-{
-    int socketfd = set_up_server();
-
-    if (socketfd < 0)
-        return socketfd;
-
-    puts("Server started");
-
-    Thread threads = thread_pool();
-
-    while (1)
+    if (new_socket < 0)
     {
-        int new_socket = accept_connection(socketfd);
-
-        if (new_socket < 0)
-        {
-            handle_error(ERROR_SOCKET_CLIENT_CONNECTION);
-        }
-        else
-        {
-            int *new_socket_ptr = malloc(sizeof(new_socket));
-
-            if (!new_socket_ptr)
-            {
-                handle_error(ERROR_MEMORY_ALLOCATION);
-                close_socket(new_socket);
-                continue;
-            }
-
-            int thread_creation = create_thread(&threads, handle_thread, new_socket_ptr);
-
-            if (thread_creation < 0)
-            {
-                handle_error(ERROR_THREAD_CREATION);
-                free(new_socket_ptr);
-                close_socket(new_socket);
-            }
-        }
+        handle_error(ERROR_SOCKET_CLIENT_CONNECTION);
+        return NULL;
     }
 
-    int thread_closing = remove_threads(&threads);
+    int *new_socket_ptr = malloc(sizeof(new_socket));
 
-    if (thread_closing < 0)
+    if (!new_socket_ptr)
     {
-        handle_error(ERROR_THREAD_CLOSING); // TODO: Forward the amount of threads unable to close
+        handle_error(ERROR_MEMORY_ALLOCATION);
+        close_socket(new_socket);
+        return NULL;
     }
 
-    return close_socket(socketfd) < 0 ? -1 : 0;
-}
+    *new_socket_ptr = new_socket;
+
+    return new_socket_ptr;
+};

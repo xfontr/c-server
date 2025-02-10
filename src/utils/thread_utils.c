@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <pthread.h>
 #include <unistd.h>
-#include "threads.h"
+#include "thread_utils.h"
 #include "../constants/configs.h"
 
 void log_thread(pthread_t thread_id, Thread *thread);
