@@ -12,10 +12,8 @@ typedef struct
 
 typedef void *(*start_routine)(void *);
 
-void remove_threads(Thread *thread);
+int remove_threads(Thread *thread);
 int create_thread(Thread *thread, start_routine callback);
 Thread thread_pool();
-
-void thread_test();
 
 #endif
