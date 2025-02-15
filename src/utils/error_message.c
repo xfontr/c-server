@@ -1,6 +1,7 @@
 #include <ctype.h>
 #include <stdio.h>
 #include <assert.h>
+#include <string.h>
 
 #include <error_codes.h>
 #include <error_messages.h>
@@ -12,7 +13,7 @@ char *error_message(int error_code)
     switch (error_code)
     {
 
-//-automated-code-begins - timestamp: 15/2/2025 - 21:0
+//-automated-code-begins - timestamp: 15/2/2025 - 21:8
     
     case ERROR_SOCKET_CREATION:
         message = ERROR_MSG_SOCKET_CREATION;
@@ -65,7 +66,7 @@ char *error_message(int error_code)
         break;
     }
 
-    assert(&message[0] != "" && &message[0] != "\0" && &message[0] != NULL);
+    assert(strncmp(&message[0], "", 1) != 0 && &message[0] != NULL);
 
     return message;
 }
