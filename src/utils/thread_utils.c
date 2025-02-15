@@ -13,12 +13,20 @@ void log_thread(pthread_t thread_id, Thread *thread)
     thread->size++;
 }
 
+int check_thread_size(Thread *thread)
+{
+    if (thread->size >= MAX_THREADS)
+    {
+        return -1;
+    }
+
+    return 0;
+}
+
 int create_thread(Thread *thread, start_routine callback, callback_parameter arg)
 {
-    if (thread->size >= MAX_CONNECTIONS)
-    {
-        return -1; // TODO: Thread-per-connection + thread-pool hybrid (we want a queue here, not a -1)
-    }
+    if (check_thread_size(thread) < 0)
+        return -1;
 
     pthread_t thread_id;
 

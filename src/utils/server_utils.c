@@ -31,7 +31,7 @@ int close_socket(int socketfd)
 {
     if (close(socketfd) < 0)
     {
-        handle_error(ERROR_SOCKET_CLOSING);
+        handle_error(ERROR_SOCKET_CLOSING, NULL);
         return -1;
     }
 
@@ -100,7 +100,7 @@ int *accept_client(int socketfd)
 
     if (new_socket < 0)
     {
-        handle_error(ERROR_SOCKET_CLIENT_CONNECTION);
+        handle_error(ERROR_SOCKET_CLIENT_CONNECTION, NULL);
         return NULL;
     }
 
@@ -108,7 +108,7 @@ int *accept_client(int socketfd)
 
     if (!new_socket_ptr)
     {
-        handle_error(ERROR_MEMORY_ALLOCATION);
+        handle_error(ERROR_MEMORY_ALLOCATION, NULL);
         close_socket(new_socket);
         return NULL;
     }

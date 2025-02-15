@@ -2,6 +2,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include <string.h>
+#include <sys/socket.h>
+
 #include "./services/server.h"
 #include "./utils/server_utils.h"
 #include "./services/errors.h"
@@ -9,10 +12,10 @@
 
 void *handler(void *new_socket)
 {
-    puts("Connection");
     int client_socket = *(int *)new_socket;
 
-    // Actual handler
+    const char *message = "Server response\n";
+    send(client_socket, message, strlen(message), 0);
 
     close_socket(client_socket);
     free(new_socket);
@@ -26,7 +29,7 @@ int main()
 
     if (result < 0)
     {
-        handle_error(result);
+        handle_error(result, NULL);
         return -1;
     }
 
