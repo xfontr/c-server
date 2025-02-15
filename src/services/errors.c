@@ -6,6 +6,7 @@
 #include <assert.h>
 
 #include <error_codes.h>
+#include <error_messages.h>
 
 static void print_error(short error_code, char *message);
 
@@ -29,49 +30,48 @@ void handle_error(short error_code, char *additional_info)
     switch (error_code)
     {
     case ERROR_SOCKET_CREATION:
-        message = "Unable to create socket";
+        message = ERROR_MSG_SOCKET_CREATION;
         break;
 
     case ERROR_SOCKET_BINDING:
-        message = "Unable to bind the socket to the server";
+        message = ERROR_MSG_SOCKET_BINDING;
         break;
 
     case ERROR_SOCKET_REUSABLE:
-        message = "Could not set the socket connection to be reusable";
+        message = ERROR_MSG_SOCKET_REUSABLE;
         break;
 
     case ERROR_SOCKET_LISTENING:
-        message = "Could not listen for connections";
+        message = ERROR_MSG_SOCKET_LISTENING;
         break;
 
     case ERROR_SOCKET_CLIENT_CONNECTION:
-        message = "Socket connection rejected";
+        message = ERROR_MSG_SOCKET_CLIENT_CONNECTION;
         break;
 
     case ERROR_SOCKET_CLOSING:
-        message = "Unable to close the selected socket";
+        message = ERROR_MSG_SOCKET_CLOSING;
         break;
 
     case ERROR_THREAD_CREATION:
-        message = "Unable to create thread";
+        message = ERROR_MSG_THREAD_CREATION;
         break;
 
     case ERROR_THREAD_LIMIT:
-        message = "Reached the maximum number of threads";
+        message = ERROR_MSG_THREAD_LIMIT;
         break;
 
     case ERROR_THREAD_CLOSING:
-        assert(error_code == ERROR_THREAD_CLOSING);
-        message = "Unable to close thread";
+        message = ERROR_MSG_THREAD_CLOSING;
         break;
 
     case ERROR_MEMORY_ALLOCATION:
-        message = "Could not allocate memory for the designated resource";
+        message = ERROR_MSG_MEMORY_ALLOCATION;
         break;
 
     default:
         error_code = ERROR_UNKNOWN;
-        message = "Unknown error";
+        message = ERROR_MSG_UNKNOWN;
         break;
     }
 
