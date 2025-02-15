@@ -3,6 +3,7 @@
 #include <errno.h>
 #include <string.h>
 #include <stdlib.h>
+#include <assert.h>
 
 #include <error_codes.h>
 
@@ -57,8 +58,10 @@ void handle_error(short error_code, char *additional_info)
 
     case ERROR_THREAD_LIMIT:
         message = "Reached the maximum number of threads";
+        break;
 
     case ERROR_THREAD_CLOSING:
+        assert(error_code == ERROR_THREAD_CLOSING);
         message = "Unable to close thread";
         break;
 
