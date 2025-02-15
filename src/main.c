@@ -19,6 +19,8 @@ static void *handler(void *new_socket)
 
     close_socket(client_socket);
     free(new_socket);
+
+    return NULL;
 }
 
 int main()

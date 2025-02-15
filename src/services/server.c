@@ -11,11 +11,11 @@
 #include <error_codes.h>
 
 static void clean_up(Thread *threads);
-static int check_thread(int thread_creation, int *new_socket);
+void check_thread(int thread_creation, int *new_socket);
 
 void clean_up(Thread *threads)
 {
-    int thread_closing = remove_threads(&threads);
+    int thread_closing = remove_threads(threads);
 
     if (thread_closing < 0)
     {
@@ -23,7 +23,7 @@ void clean_up(Thread *threads)
     }
 }
 
-int check_thread(int thread_creation, int *new_socket)
+void check_thread(int thread_creation, int *new_socket)
 {
     if (thread_creation < 0)
     {

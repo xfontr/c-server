@@ -10,7 +10,7 @@ static void print_error(short error_code, char *message);
 
 void print_error(short error_code, char *message)
 {
-    if (errno == NULL)
+    if (errno == 0)
     {
         printf("Error %d: %s\n", error_code, message);
     }
