@@ -47,3 +47,7 @@ clean:
 # Connect to the server
 connect:
 	nc 127.0.0.1 8080
+
+# Update config files
+configs:
+	node compileConfigs.mjs

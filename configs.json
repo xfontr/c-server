@@ -1,0 +1,53 @@
+{
+    "server": {
+        "port": 8080,
+        "max_connections": 5,
+        "max_threads": 1
+    },
+    "errors": [
+        {
+            "name": "SOCKET_CREATION",
+            "message": "Unable to create socket"
+        },
+        {
+            "name": "SOCKET_BINDING",
+            "message": "Unable to bind the socket to the server"
+        },
+        {
+            "name": "SOCKET_REUSABLE",
+            "message": "Could not set the socket connection to be reusable"
+        },
+        {
+            "name": "SOCKET_LISTENING",
+            "message": "Could not listen for connections"
+        },
+        {
+            "name": "SOCKET_CLIENT_CONNECTION",
+            "message": "Socket connection rejected"
+        },
+        {
+            "name": "SOCKET_CLOSING",
+            "message": "Unable to close the selected socket"
+        },
+        {
+            "name": "THREAD_CREATION",
+            "message": "Unable to create thread"
+        },
+        {
+            "name": "THREAD_LIMIT",
+            "message": "Reached the maximum number of threads"
+        },
+        {
+            "name": "THREAD_CLOSING",
+            "message": "Unable to close thread"
+        },
+        {
+            "name": "MEMORY_ALLOCATION",
+            "message": "Could not allocate memory for the designated resource"
+        },
+        {
+            "name": "UNKNOWN",
+            "message": "Unknown error"
+        }
+    ]
+}
