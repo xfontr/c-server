@@ -13,7 +13,7 @@ char *error_message(int error_code)
     switch (error_code)
     {
 
-//-automated-code-begins - timestamp: 15/2/2025 - 21:8
+//-automated-code-begins
     
     case ERROR_SOCKET_CREATION:
         message = ERROR_MSG_SOCKET_CREATION;
