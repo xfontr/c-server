@@ -5,12 +5,12 @@
 #include <string.h>
 #include <sys/socket.h>
 
-#include "./services/server.h"
-#include "./utils/server_utils.h"
-#include "./services/errors.h"
-#include "./constants/error_codes.h"
+#include <server.h>
+#include <server_utils.h>
+#include <errors.h>
+#include <constants/error_codes.h>
 
-void *handler(void *new_socket)
+static void *handler(void *new_socket)
 {
     int client_socket = *(int *)new_socket;
 

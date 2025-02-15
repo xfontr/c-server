@@ -4,14 +4,14 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-#include "server.h"
-#include "errors.h"
-#include "../utils/server_utils.h"
-#include "../utils/thread_utils.h"
-#include "../constants/error_codes.h"
+#include <server.h>
+#include <errors.h>
+#include <server_utils.h>
+#include <thread_utils.h>
+#include <error_codes.h>
 
-void clean_up(Thread *threads);
-int check_thread(int thread_creation, int *new_socket);
+static void clean_up(Thread *threads);
+static int check_thread(int thread_creation, int *new_socket);
 
 void clean_up(Thread *threads)
 {

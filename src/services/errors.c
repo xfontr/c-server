@@ -3,9 +3,10 @@
 #include <errno.h>
 #include <string.h>
 #include <stdlib.h>
-#include "../constants/error_codes.h"
 
-void print_error(short error_code, char *message);
+#include <error_codes.h>
+
+static void print_error(short error_code, char *message);
 
 void print_error(short error_code, char *message)
 {
