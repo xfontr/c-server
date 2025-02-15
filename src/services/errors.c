@@ -2,15 +2,17 @@
 #include <stdio.h>
 #include <errno.h>
 #include <string.h>
-#include "../constants/error_codes.h"
+#include <stdlib.h>
 
-void print_error(short error_code, char *message);
+#include <error_codes.h>
+
+static void print_error(short error_code, char *message);
 
 void print_error(short error_code, char *message)
 {
     if (errno == NULL)
     {
-        printf("Error %d: %s", error_code, message);
+        printf("Error %d: %s\n", error_code, message);
     }
     else
     {
@@ -19,7 +21,7 @@ void print_error(short error_code, char *message)
     }
 }
 
-void handle_error(short error_code)
+void handle_error(short error_code, char *additional_info)
 {
     char *message;
 
@@ -53,6 +55,9 @@ void handle_error(short error_code)
         message = "Unable to create thread";
         break;
 
+    case ERROR_THREAD_LIMIT:
+        message = "Reached the maximum number of threads";
+
     case ERROR_THREAD_CLOSING:
         message = "Unable to close thread";
         break;
@@ -66,6 +71,13 @@ void handle_error(short error_code)
         message = "Unknown error";
         break;
     }
+
+    if (additional_info)
+    {
+        message = strcat(message, additional_info);
+    }
+
+    free(additional_info);
 
     print_error(error_code, message);
 }

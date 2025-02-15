@@ -1,15 +1,18 @@
 # Compiler and flags
 CC = gcc
-CFLAGS = -Wall -Wextra -std=c11
+INC_DIRS = $(shell find include -type d)
+CFLAGS = -Wall -Wextra -std=c11 $(addprefix -I, $(INC_DIRS))
 
 # Directories
 SRC = src
 OUT = dist
 OBJ = obj
+INC = include
 
-# Automatically find all .c files and corresponding .o files
+# Automatically find all .c and .h files
 SRCS = $(wildcard $(SRC)/**/*.c $(SRC)/*.c)
 OBJS = $(SRCS:$(SRC)/%.c=$(OBJ)/%.o)
+DEPS = $(OBJS:.o=.d)  # Dependency tracking for headers
 
 # Target executable
 TARGET = $(OUT)/main
@@ -25,10 +28,13 @@ $(TARGET): $(OBJS)
 	@mkdir -p $(OUT)
 	$(CC) $(CFLAGS) -o $@ $^
 
-# Compile source files into object files
+# Compile source files into object files with dependency tracking
 $(OBJ)/%.o: $(SRC)/%.c
 	@mkdir -p $(dir $@)
-	$(CC) $(CFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) -MMD -MP -c $< -o $@
+
+# Include dependencies for incremental builds
+-include $(DEPS)
 
 # Run the program
 run: $(TARGET)
