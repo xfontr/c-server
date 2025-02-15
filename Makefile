@@ -51,3 +51,9 @@ connect:
 # Update config files
 configs:
 	node compileConfigs.mjs
+
+configs-g:
+	node compileConfigs.mjs
+	git add ./include/constants/
+	git add ./src/utils/error_message.c
+	git commit -m "Auto: Updated configs"
