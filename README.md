@@ -7,6 +7,8 @@ Let's learn C by doing something I don't even know how to do in JS hahah
 - Listen for and accept incoming connections
 - Handle errors
 - Multithreading
+- Defensive programming with asserts
+- Simple DSL with a custom configs API
 
 # Set up and run
 

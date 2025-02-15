@@ -1,7 +1,7 @@
 # Compiler and flags
 CC = gcc
 INC_DIRS = $(shell find include -type d)
-CFLAGS = -DNDEBUG -Wall -Wextra -std=c11 $(addprefix -I, $(INC_DIRS))
+CFLAGS = -Wall -Wextra -std=c11 $(addprefix -I, $(INC_DIRS))
 
 # Directories
 SRC = src
