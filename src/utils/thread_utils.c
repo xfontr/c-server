@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <pthread.h>
 #include <unistd.h>
+#include <assert.h>
 
 #include <thread_utils.h>
 #include <configs.h>
@@ -10,6 +11,8 @@ static void log_thread(pthread_t thread_id, Thread *thread);
 
 void log_thread(pthread_t thread_id, Thread *thread)
 {
+    assert(thread->size >= 0);
+
     thread->threads[thread->size] = thread_id;
     thread->size++;
 }
@@ -50,7 +53,7 @@ int remove_threads(Thread *thread)
 {
     int error_count = 0;
 
-    for (int i = 0; i <= thread->size; i++)
+    for (int i = 0; i < thread->size; i++)
     {
         int remove_result = pthread_join(thread->threads[i], NULL);
 
@@ -59,6 +62,8 @@ int remove_threads(Thread *thread)
 
         thread->size = thread->size - 1;
     }
+
+    assert(thread->size == 0);
 
     return error_count;
 }
