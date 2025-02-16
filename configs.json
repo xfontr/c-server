@@ -34,10 +34,6 @@
             "message": "Unable to create thread"
         },
         {
-            "name": "THREAD_LIMIT",
-            "message": "Reached the maximum number of threads"
-        },
-        {
             "name": "THREAD_CLOSING",
             "message": "Unable to close thread"
         },
