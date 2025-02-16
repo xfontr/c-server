@@ -10,15 +10,14 @@
 #include <errors.h>
 #include <constants/error_codes.h>
 
-static void *handler(void *new_socket)
+static void *handler(void *socketfd)
 {
-    int client_socket = *(int *)new_socket;
-
+    int client_socket = *(int *)socketfd;
     const char *message = "Server response\n";
     send(client_socket, message, strlen(message), 0);
 
     close_socket(client_socket);
-    free(new_socket);
+    free(socketfd);
 
     return NULL;
 }
