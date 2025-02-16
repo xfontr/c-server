@@ -5,18 +5,11 @@
 
 #include <configs.h>
 
-typedef struct
-{
-    pthread_t threads[MAX_THREADS];
-    int size;
-} Thread;
+typedef void *(*thread_handler)(void *);
 
-typedef void *(*start_routine)(void *);
-typedef void *(callback_parameter);
+typedef pthread_t thread;
 
-int remove_threads(Thread *thread);
-int create_thread(Thread *thread, start_routine callback, callback_parameter arg);
-int check_thread_size(Thread *thread);
-Thread thread_pool();
+int create_threads(thread *threads, thread_handler callback, int size);
+int remove_threads(thread *threads, int size);
 
 #endif
