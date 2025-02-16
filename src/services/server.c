@@ -3,44 +3,68 @@
 #include <sys/socket.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <assert.h>
 
 #include <server.h>
 #include <errors.h>
 #include <server_utils.h>
 #include <thread_utils.h>
 #include <error_codes.h>
+#include <queue.h>
+#include <linked_list.h>
 
-static void clean_up(Thread *threads);
-void check_thread(int thread_creation, int *new_socket);
+static void clean_up(thread *threads);
+void set_up_threads(thread *threads);
 
-void clean_up(Thread *threads)
+client_handler main_handler;
+node **head = NULL;
+node **tail = NULL;
+
+void clean_up(thread *threads)
 {
-    int thread_closing = remove_threads(threads);
+    int thread_closing = remove_threads(threads, MAX_THREADS);
 
-    if (thread_closing < 0)
+    if (thread_closing != MAX_THREADS)
     {
-        handle_error(ERROR_THREAD_CLOSING, NULL); // TODO: Forward the amount of threads unable to close
+        handle_error(ERROR_THREAD_CLOSING, NULL); // TODO
     }
 }
 
-void check_thread(int thread_creation, int *new_socket)
+static void *thread_handle()
 {
-    if (thread_creation < 0)
+    assert(main_handler != NULL);
+
+    while (true)
     {
-        handle_error(ERROR_THREAD_CREATION, NULL);
-        free(new_socket);
-        close_socket(*new_socket);
+        void *value = dequeue(head, tail);
+
+        if (value != NULL)
+            main_handler(value);
+    }
+}
+
+void set_up_threads(thread *threads)
+{
+    int thread_creating = create_threads(threads, thread_handle, MAX_THREADS);
+
+    if (thread_creating != MAX_THREADS)
+    {
+        handle_error(ERROR_THREAD_CREATION, NULL); // TODO
     }
 }
 
 int server(client_handler handler)
 {
+    main_handler = handler;
+
     int socketfd = set_up_server();
 
     if (socketfd < 0)
         return socketfd;
 
-    Thread threads = thread_pool();
+    thread threads[MAX_THREADS];
+
+    set_up_threads(threads);
 
     while (true)
     {
@@ -49,20 +73,10 @@ int server(client_handler handler)
         if (!new_socket)
             continue;
 
-        int thread_limit = check_thread_size(&threads);
-
-        if (thread_limit < 0)
-        {
-            handle_error(ERROR_THREAD_LIMIT, NULL);
-        }
-        else
-        {
-            int thread_creation = create_thread(&threads, handler, new_socket);
-            check_thread(thread_creation, new_socket);
-        }
+        enqueue(head, tail, new_socket);
     }
 
-    clean_up(&threads);
+    clean_up(threads);
 
     return close_socket(socketfd) < 0 ? -1 : 0;
 }
