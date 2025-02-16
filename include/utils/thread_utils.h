@@ -2,11 +2,12 @@
 #define THREADS
 
 #include <pthread.h>
-#include "../constants/configs.h"
+
+#include <configs.h>
 
 typedef struct
 {
-    pthread_t threads[MAX_CONNECTIONS];
+    pthread_t threads[MAX_THREADS];
     int size;
 } Thread;
 

@@ -36,8 +36,8 @@ $(OBJ)/%.o: $(SRC)/%.c
 # Include dependencies for incremental builds
 -include $(DEPS)
 
-# Run the program
-run: $(TARGET)
+# Dev build and run
+dev-run: $(TARGET)
 	./$(TARGET)
 
 # Clean build artifacts
@@ -52,8 +52,15 @@ connect:
 configs:
 	node compileConfigs.mjs
 
+# Update config files and commit to github
 configs-g:
-	node compileConfigs.mjs
+	make configs
 	git add ./include/constants/
 	git add ./src/utils/error_message.c
 	git commit -m "Auto: Updated configs"
+
+# Run the program
+run:
+	make configs
+	make clean
+	make dev-run
