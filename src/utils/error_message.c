@@ -43,10 +43,6 @@ char *error_message(int error_code)
         message = ERROR_MSG_THREAD_CREATION;
         break;
 
-    case ERROR_THREAD_LIMIT:
-        message = ERROR_MSG_THREAD_LIMIT;
-        break;
-
     case ERROR_THREAD_CLOSING:
         message = ERROR_MSG_THREAD_CLOSING;
         break;

@@ -7,72 +7,43 @@
 #include <thread_utils.h>
 #include <configs.h>
 
-static void log_thread(pthread_t thread_id, Thread *thread);
+static int create_thread(thread *thread_id, thread_handler handler);
 
-void log_thread(pthread_t thread_id, Thread *thread)
+/**
+ * TODO: Consider detached threads (2nd param) depending on the thread pattern used
+ */
+int create_thread(thread *thread_id, thread_handler handler)
 {
-    assert(thread->size >= 0);
-
-    thread->threads[thread->size] = thread_id;
-    thread->size++;
+    return pthread_create(thread_id, NULL, handler, NULL);
 }
 
-int check_thread_size(Thread *thread)
+int create_threads(thread *threads, thread_handler handler, int size)
 {
-    if (thread->size >= MAX_THREADS)
+    int success_count = 0;
+
+    for (int i = 0; i < size; i++)
     {
-        return -1;
+        int thread_result = create_thread(&threads[i], handler);
+
+        if (thread_result == 0)
+            success_count++;
     }
 
-    return 0;
-}
-
-int create_thread(Thread *thread, start_routine callback, callback_parameter arg)
-{
-    if (check_thread_size(thread) < 0)
-        return -1;
-
-    pthread_t thread_id;
-
-    // TODO: Consider detached threads (2nd param) depending on the thread pattern used
-    int thread_result = pthread_create(&thread_id, NULL, callback, arg);
-
-    if (thread_result >= 0)
-        log_thread(thread_id, thread);
-
-    return thread_result;
+    return success_count;
 }
 
 /**
- * Closes all threads and returns the number of failures.
- *
- * @return 0 if all threads closed successfully.
- *         -N if N threads failed to close.
+ * @return Number of failed thread joins.
  */
-int remove_threads(Thread *thread)
+int remove_threads(thread *threads, int size)
 {
     int error_count = 0;
 
-    for (int i = 0; i < thread->size; i++)
+    for (int i = 0; i < size; i++)
     {
-        int remove_result = pthread_join(thread->threads[i], NULL);
-
-        if (remove_result < 0)
-            error_count--;
-
-        thread->size = thread->size - 1;
+        if (pthread_join(threads[i], NULL) != 0)
+            error_count++;
     }
 
-    assert(thread->size == 0);
-
     return error_count;
-}
-
-Thread thread_pool()
-{
-    Thread thread = {
-        .size = 0,
-    };
-
-    return thread;
 }

@@ -23,12 +23,12 @@ void enqueue(node **head, node **tail, void *value)
 
 void *dequeue(node **head, node **tail)
 {
-    if (*head == NULL)
+    if (head == NULL || *head == NULL)
         return NULL;
 
-    void *value = (*head)->value;
-
+    void *dequeued_value = (*head)->value;
     node *old_head = *head;
+
     *head = (*head)->next;
 
     if (*head == NULL)
@@ -36,5 +36,11 @@ void *dequeue(node **head, node **tail)
 
     free(old_head);
 
-    return value;
+    return dequeued_value;
 }
+
+// 1.- Remove head
+// 2.- Head becomes the next in line
+// 3.- If no next in line, will, head goes null
+// 4.- We probably don't need to update the tail
+// 5.- We return head's value

@@ -32,7 +32,7 @@ void print_all(node *head)
 
     while (current != NULL)
     {
-        printf("%s\n", current->value);
+        printf("%d\n", (int *)current->value);
         current = current->next;
     }
 }
