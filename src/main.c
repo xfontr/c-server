@@ -13,19 +13,20 @@
 static void *handler(void *socketfd)
 {
     int client_socket = *(int *)socketfd;
+
     const char *message = "Server response\n";
     send(client_socket, message, strlen(message), 0);
 
     close_socket(client_socket);
     free(socketfd);
 
+    puts("Connection successfully handled");
+
     return NULL;
 }
 
 int main()
 {
-    puts("Server on");
-
     int result = server(handler);
 
     if (result < 0)

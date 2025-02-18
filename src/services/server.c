@@ -36,10 +36,12 @@ static void *thread_handle()
 
     while (true)
     {
-        void *value = dequeue(head, tail);
+        void *value = dequeue(&head, &tail);
 
         if (value != NULL)
+        {
             main_handler(value);
+        }
     }
 }
 
@@ -62,9 +64,13 @@ int server(client_handler handler)
     if (socketfd < 0)
         return socketfd;
 
+    puts("Server successfully set up");
+
     thread threads[MAX_THREADS];
 
     set_up_threads(threads);
+
+    puts("Listening for clients:");
 
     while (true)
     {
@@ -73,7 +79,7 @@ int server(client_handler handler)
         if (!new_socket)
             continue;
 
-        enqueue(head, tail, new_socket);
+        enqueue(&head, &tail, new_socket);
     }
 
     clean_up(threads);

@@ -23,7 +23,9 @@ int create_threads(thread *threads, thread_handler handler, int size)
 
     for (int i = 0; i < size; i++)
     {
-        if (create_thread(&threads[i], handler) == 0)
+        int thread_result = create_thread(&threads[i], handler);
+
+        if (thread_result == 0)
             success_count++;
     }
 
