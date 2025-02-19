@@ -22,7 +22,8 @@ const errorUtilsPath = "./src/utils/error_message.c";
 //#region Template utils
 const addQuotes = (content) => typeof content === "string" ? `"${content}"` : content;
 
-const dataRowToConfig = ({ name, content }) => `#define ${name.toLocaleUpperCase()} ${addQuotes(content)}`;
+const dataRowToConfig = ({ name, content }) =>
+    `#define ${name.toLocaleUpperCase()} ${addQuotes(content)}`;
 
 const headerTemplate = (name, data) => `/*
 *
@@ -77,9 +78,15 @@ const generateErrorMessages = async (data) => {
 const updateErrorUtils = async (configs) => {
     const utilsC = await readFile(errorUtilsPath, "utf8");
 
-    const newSwitches = configs.errors.map(({ name }) => `    case ${ERROR_CODE_PREFIX}${name}:\n        message = ${ERROR_MESSAGE_PREFIX}${name};\n        break;`).join("\n\n")
+    const newSwitches = configs.errors.map(({ name }) =>
+        `    case ${ERROR_CODE_PREFIX}${name}:\n        message = ${ERROR_MESSAGE_PREFIX}${name};\n        break;`).join("\n\n")
 
-    await writeFile(errorUtilsPath, utilsC.replace(/\/\/-automated-code-begins[\s\S]*?\/\/-automated-code-ends/g, implementationTemplate(newSwitches)));
+    await writeFile(
+        errorUtilsPath,
+        utilsC.replace(
+            /\/\/-automated-code-begins[\s\S]*?\/\/-automated-code-ends/g,
+            implementationTemplate(newSwitches))
+    );
 }
 
 const generateServerConfigs = async (data) => {
