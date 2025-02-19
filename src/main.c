@@ -20,8 +20,6 @@ static void *handler(void *socketfd)
     close_socket(client_socket);
     free(socketfd);
 
-    puts("Connection successfully handled");
-
     return NULL;
 }
 

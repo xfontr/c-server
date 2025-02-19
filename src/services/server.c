@@ -14,7 +14,9 @@
 #include <linked_list.h>
 
 static void clean_up(thread *threads);
-void set_up_threads(thread *threads);
+static void set_up_threads(thread *threads);
+
+mutex thread_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 client_handler main_handler;
 node **head = NULL;
@@ -36,7 +38,9 @@ static void *thread_handle()
 
     while (true)
     {
+        pthread_mutex_lock(&thread_mutex);
         void *value = dequeue(&head, &tail);
+        pthread_mutex_unlock(&thread_mutex);
 
         if (value != NULL)
         {
@@ -63,8 +67,6 @@ int server(client_handler handler)
 
     if (socketfd < 0)
         return socketfd;
-
-    puts("Server successfully set up");
 
     thread threads[MAX_THREADS];
 

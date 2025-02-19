@@ -1,8 +1,8 @@
 {
     "server": {
         "port": 8080,
-        "max_connections": 5,
-        "max_threads": 1
+        "max_connections": 300,
+        "max_threads": 2
     },
     "errors": [
         {
